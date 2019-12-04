@@ -1,0 +1,5 @@
+(fp_lib_table
+  (lib (name digikey-footprints)(type KiCad)(uri ${KIPRJMOD}/digikey-kicad-library-master/digikey-footprints.pretty)(options "")(descr "")(disabled))
+  (lib (name Zimprich)(type KiCad)(uri ${KIPRJMOD}/KiCad/modules/Zimprich.pretty)(options "")(descr ""))
+  (lib (name SpotMicroAI)(type KiCad)(uri ${KIPRJMOD}/KiCad/modules/SpotMicroAI.pretty)(options "")(descr ""))
+)

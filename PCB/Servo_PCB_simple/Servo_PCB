@@ -1,0 +1,91 @@
+Source,C:\Users\Weber\Documents\GitHub\SpotMicroAI\Servo_PCB_simple\Servo_PCB.sch
+Kicad Rev,Eeschema (5.1.2)-2
+Generated Date,27.10.2019 19:57:16
+
+Title,Not Set
+Company,Not Set
+Revision,Not Set
+Date Issue,Not Set
+
+Reference,Value,Library,Library Ref
+J1,Screw_Terminal_01x02,Connector,Screw_Terminal_01x02
+S1,Conn_01x03,Connector_Generic,Conn_01x03
+J_I2C1,Conn_01x04,Connector_Generic,Conn_01x04
+S2,Conn_01x03,Connector_Generic,Conn_01x03
+S3,Conn_01x03,Connector_Generic,Conn_01x03
+FMain1,20A,Device,Fuse
+DMain1,Schottky 30V25A,Device,D_Schottky
+R_SCL1,10K,Device,R
+R_SDA1,10K,Device,R
+CMain_ServoVCC1,2200uF,Device,CP
+PWR_LED1,Green,Device,LED_Small
+R_PWR_LED1,470,Device,R_Small
+J2,Screw_Terminal_01x02,Connector,Screw_Terminal_01x02
+FMain2,20A,Device,Fuse
+DMain2,Schottky 30V25A,Device,D_Schottky
+CMain_ServoVCC2,2200uF,Device,CP
+RShunt1,0.05Ohm,Device,R_Small
+RShunt2,0.05Ohm,Device,R_Small
+RShunt3,0.05Ohm,Device,R_Small
+S1+1,TestPoint,Connector,TestPoint
+S1-1,TestPoint,Connector,TestPoint
+S2+1,TestPoint,Connector,TestPoint
+S2-1,TestPoint,Connector,TestPoint
+S3-1,TestPoint,Connector,TestPoint
+S4+1,TestPoint,Connector,TestPoint
+S4-1,TestPoint,Connector,TestPoint
+S5+1,TestPoint,Connector,TestPoint
+S5-1,TestPoint,Connector,TestPoint
+S6+1,TestPoint,Connector,TestPoint
+S6-1,TestPoint,Connector,TestPoint
+TP13,TestPoint,Connector,TestPoint
+TP14,TestPoint,Connector,TestPoint
+TP15,TestPoint,Connector,TestPoint
+TP16,TestPoint,Connector,TestPoint
+TP17,TestPoint,Connector,TestPoint
+TP18,TestPoint,Connector,TestPoint
+TP19,TestPoint,Connector,TestPoint
+TP20,TestPoint,Connector,TestPoint
+TP21,TestPoint,Connector,TestPoint
+TP22,TestPoint,Connector,TestPoint
+TP23,TestPoint,Connector,TestPoint
+TP24,TestPoint,Connector,TestPoint
+S3+1,TestPoint,Connector,TestPoint
+H3,MountingHole,Mechanical,MountingHole
+H2,MountingHole,Mechanical,MountingHole
+S4,Conn_01x03,Connector_Generic,Conn_01x03
+S5,Conn_01x03,Connector_Generic,Conn_01x03
+S6,Conn_01x03,Connector_Generic,Conn_01x03
+RShunt4,0.05Ohm,Device,R_Small
+RShunt5,0.05Ohm,Device,R_Small
+RShunt6,0.05Ohm,Device,R_Small
+S7,Conn_01x03,Connector_Generic,Conn_01x03
+S8,Conn_01x03,Connector_Generic,Conn_01x03
+S9,Conn_01x03,Connector_Generic,Conn_01x03
+RShunt7,0.05Ohm,Device,R_Small
+RShunt8,0.05Ohm,Device,R_Small
+RShunt9,0.05Ohm,Device,R_Small
+S10,Conn_01x03,Connector_Generic,Conn_01x03
+S11,Conn_01x03,Connector_Generic,Conn_01x03
+S12,Conn_01x03,Connector_Generic,Conn_01x03
+RShunt10,0.05,Device,R_Small
+RShunt11,0.05,Device,R_Small
+RShunt12,0.05,Device,R_Small
+PCA1,PCA9685PW,Driver_LED,PCA9685PW
+C_PCA1,10uF,Device,C_Small
+RN2,200,Device,R_Pack04
+RN3,200,Device,R_Pack04
+LP_PCA6,A5,Zimprich,Lötpad
+LP_PCA5,A4,Zimprich,Lötpad
+LP_PCA3,A2,Zimprich,Lötpad
+LP_PCA2,A1,Zimprich,Lötpad
+LP_PCA1,A0,Zimprich,Lötpad
+R1,10K,Device,R_Small
+R2,10K,Device,R_Small
+R3,10K,Device,R_Small
+R4,10K,Device,R_Small
+R5,10K,Device,R_Small
+R6,10K,Device,R_Small
+R7,10K,Device,R_Small
+LP_PCA4,A3,Zimprich,Lötpad
+RN1,200Ohm,Device,R_Pack04

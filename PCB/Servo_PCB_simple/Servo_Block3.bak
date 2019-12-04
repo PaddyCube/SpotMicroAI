@@ -1,0 +1,77 @@
+EESchema Schematic File Version 4
+LIBS:Servo_PCB-cache
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 3 5
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Connector_Generic:Conn_01x03 JServo?
+U 1 1 5DA1A6C5
+P 1250 1950
+AR Path="/5DA1A6C5" Ref="JServo?"  Part="1" 
+AR Path="/5D9FB295/5DA1A6C5" Ref="JServo?"  Part="1" 
+AR Path="/5DA0FFA3/5DA1A6C5" Ref="JServo7"  Part="1" 
+F 0 "JServo7" H 1168 1625 50  0000 C CNN
+F 1 "Conn_01x03" H 1168 1716 50  0000 C CNN
+F 2 "Connector_JST:JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical" H 1250 1950 50  0001 C CNN
+F 3 "~" H 1250 1950 50  0001 C CNN
+	1    1250 1950
+	-1   0    0    1   
+$EndComp
+Text GLabel 1450 1950 2    50   Input ~ 0
+Servo_VCC1
+Text GLabel 1450 1850 2    50   Input ~ 0
+Servo_GND1
+Text GLabel 1450 2050 2    50   Input ~ 0
+PWM_Servo7
+$Comp
+L Connector_Generic:Conn_01x03 JServo?
+U 1 1 5DA1A6CC
+P 1250 2500
+AR Path="/5DA1A6CC" Ref="JServo?"  Part="1" 
+AR Path="/5D9FB295/5DA1A6CC" Ref="JServo?"  Part="1" 
+AR Path="/5DA0FFA3/5DA1A6CC" Ref="JServo8"  Part="1" 
+F 0 "JServo8" H 1168 2175 50  0000 C CNN
+F 1 "Conn_01x03" H 1168 2266 50  0000 C CNN
+F 2 "Connector_JST:JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical" H 1250 2500 50  0001 C CNN
+F 3 "~" H 1250 2500 50  0001 C CNN
+	1    1250 2500
+	-1   0    0    1   
+$EndComp
+Text GLabel 1450 2400 2    50   Input ~ 0
+Servo_GND1
+Text GLabel 1450 2600 2    50   Input ~ 0
+PWM_Servo8
+$Comp
+L Connector_Generic:Conn_01x03 JServo?
+U 1 1 5DA1A6CF
+P 1250 3050
+AR Path="/5DA1A6CF" Ref="JServo?"  Part="1" 
+AR Path="/5D9FB295/5DA1A6CF" Ref="JServo?"  Part="1" 
+AR Path="/5DA0FFA3/5DA1A6CF" Ref="JServo9"  Part="1" 
+F 0 "JServo9" H 1168 2725 50  0000 C CNN
+F 1 "Conn_01x03" H 1168 2816 50  0000 C CNN
+F 2 "Connector_JST:JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical" H 1250 3050 50  0001 C CNN
+F 3 "~" H 1250 3050 50  0001 C CNN
+	1    1250 3050
+	-1   0    0    1   
+$EndComp
+Text GLabel 1450 2950 2    50   Input ~ 0
+Servo_GND1
+Text GLabel 1450 3150 2    50   Input ~ 0
+PWM_Servo9
+Text GLabel 1450 2500 2    50   Input ~ 0
+Servo_VCC1
+Text GLabel 1450 3050 2    50   Input ~ 0
+Servo_VCC1
+$EndSCHEMATC
