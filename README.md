@@ -20,13 +20,13 @@ The firmware provides some factory defaults for all settings. However, you can c
 
 <p>
 -----------MAIN MENU----------<br>
-f=delete all USER settings (reset all user settings in EEPROM)
-s=save USER settings (save user settings to EEPROM)
-x=print current settings
-1=communications menu (setup ROS & WIFI)
-2=Servo settings
-m=move servo manual
-0=exit
+f=delete all USER settings (reset all user settings in EEPROM)<br>
+s=save USER settings (save user settings to EEPROM)<br>
+x=print current settings<br>
+1=communications menu (setup ROS & WIFI)<br>
+2=Servo settings<br>
+m=move servo manual<br>
+0=exit<br>
 </p>
 
 Please note, if you first upload this firmware to your robot, your EEPROM might be filled with corrupt data. Please clear your EEPROM by deleting all user settings (f)
