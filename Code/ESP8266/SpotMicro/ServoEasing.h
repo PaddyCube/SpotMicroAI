@@ -33,7 +33,7 @@
 /*
  * For use with e.g. the Adafruit PCA9685 16-Channel Servo Driver aOffUnits.
  */
-#define USE_PCA9685_SERVO_EXPANDER
+//#define USE_PCA9685_SERVO_EXPANDER
 /*
  * If you have only one or two servos, then you can save program space by defining symbol `USE_LEIGHTWEIGHT_SERVO_LIB`.
  * This saves 742 bytes FLASH and 42 bytes RAM.
@@ -117,9 +117,38 @@
 // Enable this to generate output for Arduino Serial Plotter (Ctrl-Shift-L)
 //#define PRINT_FOR_SERIAL_PLOTTER
 //
-#define VERSION_SERVO_EASING 1.4.1
+/*
+ * Enable this to see information on each call.
+ * Since there should be no library which uses Serial, enable TRACE only for development purposes.
+ */
+//#define TRACE
+//#define DEBUG
+// Propagate debug level
+#ifdef TRACE
+#define DEBUG
+#endif
+#ifdef DEBUG
+#define INFO
+#endif
+#ifdef INFO
+#define WARN
+#endif
+#ifdef WARN
+#define ERROR
+#endif
+
+#define VERSION_SERVO_EASING 1.4.3
 
 /*
+ * Version 1.4.3 - 12/2019
+ * - Improved detach() handling.
+ * - Initialize mSpeed explicitly to 0 in constructor. On an ESP8266 it was NOT initialized to 0 :-(.
+ *
+ * Version 1.4.2 - 11/2019
+ * - Improved INVALID_SERVO handling.
+ * - Speed 0 (not initialized) handling.
+ * - Fixed bug in ThreeServos example.
+ *
  * Version 1.4.1 - 11/2019
  * - Improved documentation and definitions for continuous rotating servo. Thanks to Eebel!
  * - Improved support and documentation for generating Arduino Serial Plotter output.
@@ -157,26 +186,6 @@
  * - added compile switch PROVIDE_ONLY_LINEAR_MOVEMENT to save additional 1500 bytes FLASH if enabled.
  * - added convenience function clipDegreeSpecial().
  */
-
-/*
- * Enable this to see information on each call.
- * Since there should be no library which uses Serial, enable TRACE only for development purposes.
- */
-//#define TRACE
-//#define DEBUG
-// Propagate debug level
-#ifdef TRACE
-#define DEBUG
-#endif
-#ifdef DEBUG
-#define INFO
-#endif
-#ifdef INFO
-#define WARN
-#endif
-#ifdef WARN
-#define ERROR
-#endif
 
 #define DEFAULT_MICROSECONDS_FOR_0_DEGREE 544
 #define DEFAULT_MICROSECONDS_FOR_180_DEGREE 2400
@@ -301,11 +310,16 @@ class ServoEasing
 public:
 
 #if defined(USE_PCA9685_SERVO_EXPANDER)
+#if defined(ARDUINO_SAM_DUE)
+    ServoEasing(uint8_t aPCA9685I2CAddress = PCA9685_DEFAULT_ADDRESS, TwoWire *aI2CClass = &Wire1);
+#else
     ServoEasing(uint8_t aPCA9685I2CAddress = PCA9685_DEFAULT_ADDRESS, TwoWire *aI2CClass = &Wire);
+#endif
     void PCA9685Reset();
     void PCA9685Init();
     void I2CWriteByte(uint8_t aAddress, uint8_t aData);
     void setPWM(uint16_t aOffUnits);
+    void setPWM(uint16_t aPWMOnValueAsUnits, uint16_t aPWMOffValueAsUnits);
     // main mapping function for us to PCA9685 Units (20000/4096 = 4.88 us)
     int MicrosecondsToPCA9685Units(int aMicroseconds);
 #else
@@ -395,7 +409,7 @@ public:
 #endif
     uint8_t mServoPin; // pin number or NO_SERVO_ATTACHED_PIN_NUMBER - at least needed for Lightweight Servo Lib
 
-    uint8_t mServoIndex; // Index in sServoArray
+    uint8_t mServoIndex; // Index in sServoArray or INVALID_SERVO if error while attach() or if detached
 
     uint32_t mMillisAtStartMove;
     uint16_t mMillisForCompleteMove;
@@ -413,8 +427,10 @@ public:
 };
 
 /*
- * List of all servos to enable synchronized movings
- * Servos are inserted in the order, in which they are declared
+ * Array of all servos to enable synchronized movings
+ * Servos are inserted in the order, in which they are attached
+ * I use an fixed array and not a list, since accessing an array is much easier and faster.
+ * Using an dynamic array may be possible, but in this case we must first malloc(), then memcpy() and then free(), which leads to heap fragmentation.
  */
 extern uint8_t sServoCounter;
 extern ServoEasing * sServoArray[MAX_EASING_SERVOS];
