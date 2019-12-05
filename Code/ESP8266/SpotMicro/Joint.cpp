@@ -41,13 +41,13 @@ bool Joint::moveAngle(int angle, int msec)
 
     if (invert == true)
     {
-        targetangle = 180 - angle;
+        targetangle = 180 - angle + this->offset;
     }
     else
     {
-        targetangle = angle;
+        targetangle = angle + this->offset;
     }
-    if (angle < servomin || angle > servomax)
+    if ((angle + this->offset) < servomin || (angle + this->offset) > servomax)
     {
         Serial.print("invalid target angle ");
         Serial.println(angle);
@@ -68,7 +68,7 @@ bool Joint::moveAngle(int angle, int msec)
 
 void Joint::moveHome()
 {
-    this->Servo.write(this->home);
+    this->Servo.write(this->home + this->offset);
 }
 
 int Joint::getServoMin()
