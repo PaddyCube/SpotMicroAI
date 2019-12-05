@@ -19,7 +19,7 @@
 The firmware provides some factory defaults for all settings. However, you can change all settings using serial console. If you start serial console, hit 'm' to enter main menu. The main menu provides some functionalities to show and change the settings. All settings can be stored to EEPROM of ESP8266.
 
 <p>
------------MAIN MENU----------
+-----------MAIN MENU----------<br>
 f=delete all USER settings (reset all user settings in EEPROM)
 s=save USER settings (save user settings to EEPROM)
 x=print current settings
