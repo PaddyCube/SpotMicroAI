@@ -14,12 +14,23 @@ Joint::Joint()
     Servo = ServoEasing(PCA9685_DEFAULT_ADDRESS, &Wire);
 }
 
-bool Joint::init(int pin, int min, int max, int off, bool invert)
+bool Joint::init(int pin, int min, int max, int off, int homepos, bool invert)
 {
     this->Servo.attach(pin);
     servomin = min;
     servomax = max;
     offset = off;
+    home = homepos;
+    this->invert = invert;
+    this->Servo.setEasingType(EASE_SINE_IN_OUT);
+}
+
+bool Joint::init(int min, int max, int off, int homepos, bool invert)
+{
+    servomin = min;
+    servomax = max;
+    offset = off;
+    home = homepos;
     this->invert = invert;
     this->Servo.setEasingType(EASE_SINE_IN_OUT);
 }
@@ -55,6 +66,11 @@ bool Joint::moveAngle(int angle, int msec)
     return true;
 }
 
+void Joint::moveHome()
+{
+    this->Servo.write(this->home);
+}
+
 int Joint::getServoMin()
 {
     return this->servomin;
@@ -62,6 +78,18 @@ int Joint::getServoMin()
 int Joint::getServoMax()
 {
     return this->servomax;
+}
+int Joint::getServoOffset()
+{
+    return this->offset;
+}
+int Joint::getServoHome()
+{
+    return this->home;
+}
+bool Joint::getServoInvert()
+{
+    return this->invert;
 }
 
 bool Joint::lastMoveComplete()

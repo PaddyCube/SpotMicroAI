@@ -36,12 +36,16 @@ void readSerial();
 void purgeConsole();
 void moveServoManual();
 
-void getServoConfig(int count, int &min, int &max, int &off, bool &inv);
+void getServoConfig(int count, int &min, int &max, int &off, int &home, bool &inv);
+void setServoConfig(int count, int &min, int &max, int &off, int &home, bool &inv);
 bool setup_wifi();
 configData_t loadConfig();
 configData_t loadFactorySettings();
-void saveConfig(configData_t);
+void saveConfig(configData_t conf);
 void eraseConfig();
+void printSettings();
+void settingsWifi();
+void settingsServo();
 
 
 

@@ -19,7 +19,7 @@ int configEEPROMStart = 0;
 configData_t loadFactorySettings()
 {
     configData_t conf;
-    
+
     conf.EEPROM = false; // leave this always to false as it is used to determine if EEPROM read was successful
 
     // communication settings
@@ -27,9 +27,9 @@ configData_t loadFactorySettings()
     strlcpy(conf.SSID, "YOUR SSID", 31);
     //conf.SSID = "YOUR SSID";
     strlcpy(conf.PSK, "YOUR PSK", 31);
-    
+
     // ROS related settings
-    strlcpy(conf.ROS_MASTER,"127.0.0.1", 31);
+    strlcpy(conf.ROS_MASTER, "127.0.0.1", 31);
 
     /*------------------ SERVO SETTINGS -----------*/
     // front left
@@ -189,12 +189,13 @@ configData_t loadConfig()
 *********************************************/
 void saveConfig(configData_t conf)
 {
-    config.EEPROM = true; // set EEPROM true because we now create data in EEPROM, needed for EEPROM read check
+    conf.EEPROM = true; // set EEPROM true because we now create data in EEPROM, needed for EEPROM read check
     EEPROM.begin(4095);
     EEPROM.put(configEEPROMStart, conf);
     delay(200);
     EEPROM.commit(); // Only needed for ESP8266 to get data written
     EEPROM.end();    // Free RAM copy of structure
+    Serial.println("Saved to EEPROM");
 }
 
 /*********************************************
@@ -211,12 +212,13 @@ void eraseConfig()
     delay(200);
     EEPROM.commit();
     EEPROM.end();
+    Serial.println("EEPROM cleared");
 }
 
 /*********************************************
 * GETSERVOCONFIG - read servo data (min, max, invert etc.) from config
 *********************************************/
-void getServoConfig(int count, int &min, int &max, int &offset, bool &inv)
+void getServoConfig(int count, int &min, int &max, int &offset, int &home, bool &inv)
 {
     switch (count)
     {
@@ -224,97 +226,235 @@ void getServoConfig(int count, int &min, int &max, int &offset, bool &inv)
         min = config.SERVO0_MIN;
         max = config.SERVO0_MAX;
         inv = config.SERVO0_INVERT;
+        home = config.SERVO0_HOME;
         offset = config.SERVO0_OFFSET;
         break;
     case 1:
         min = config.SERVO1_MIN;
         max = config.SERVO1_MAX;
         inv = config.SERVO1_INVERT;
+        home = config.SERVO1_HOME;
         offset = config.SERVO1_OFFSET;
         break;
     case 2:
         min = config.SERVO2_MIN;
         max = config.SERVO2_MAX;
         inv = config.SERVO2_INVERT;
+        home = config.SERVO2_HOME;
         offset = config.SERVO2_OFFSET;
         break;
     case 3:
         min = config.SERVO3_MIN;
         max = config.SERVO3_MAX;
         inv = config.SERVO3_INVERT;
+        home = config.SERVO3_HOME;
         offset = config.SERVO3_OFFSET;
         break;
     case 4:
         min = config.SERVO4_MIN;
         max = config.SERVO4_MAX;
         inv = config.SERVO4_INVERT;
+        home = config.SERVO4_HOME;
         offset = config.SERVO4_OFFSET;
         break;
     case 5:
         min = config.SERVO5_MIN;
         max = config.SERVO5_MAX;
         inv = config.SERVO5_INVERT;
+        home = config.SERVO5_HOME;
         offset = config.SERVO5_OFFSET;
         break;
     case 6:
         min = config.SERVO6_MIN;
         max = config.SERVO6_MAX;
         inv = config.SERVO6_INVERT;
+        home = config.SERVO6_HOME;
         offset = config.SERVO6_OFFSET;
         break;
     case 7:
         min = config.SERVO7_MIN;
         max = config.SERVO7_MAX;
         inv = config.SERVO7_INVERT;
+        home = config.SERVO7_HOME;
         offset = config.SERVO7_OFFSET;
         break;
     case 8:
         min = config.SERVO8_MIN;
         max = config.SERVO8_MAX;
         inv = config.SERVO8_INVERT;
+        home = config.SERVO8_HOME;
         offset = config.SERVO8_OFFSET;
         break;
     case 9:
         min = config.SERVO9_MIN;
         max = config.SERVO9_MAX;
         inv = config.SERVO9_INVERT;
+        home = config.SERVO9_HOME;
         offset = config.SERVO9_OFFSET;
         break;
     case 10:
         min = config.SERVO10_MIN;
         max = config.SERVO10_MAX;
         inv = config.SERVO10_INVERT;
+        home = config.SERVO10_HOME;
         offset = config.SERVO10_OFFSET;
         break;
     case 11:
         min = config.SERVO11_MIN;
         max = config.SERVO11_MAX;
         inv = config.SERVO11_INVERT;
+        home = config.SERVO11_HOME;
         offset = config.SERVO11_OFFSET;
         break;
     case 12:
         min = config.SERVO12_MIN;
         max = config.SERVO12_MAX;
         inv = config.SERVO12_INVERT;
+        home = config.SERVO12_HOME;
         offset = config.SERVO12_OFFSET;
         break;
     case 13:
         min = config.SERVO13_MIN;
         max = config.SERVO13_MAX;
         inv = config.SERVO13_INVERT;
+        home = config.SERVO13_HOME;
         offset = config.SERVO13_OFFSET;
         break;
     case 14:
         min = config.SERVO14_MIN;
         max = config.SERVO14_MAX;
         inv = config.SERVO14_INVERT;
+        home = config.SERVO14_HOME;
         offset = config.SERVO14_OFFSET;
         break;
     case 15:
         min = config.SERVO15_MIN;
         max = config.SERVO15_MAX;
         inv = config.SERVO15_INVERT;
+        home = config.SERVO15_HOME;
         offset = config.SERVO15_OFFSET;
+        break;
+    }
+}
+
+/*********************************************
+* SETSERVOCONFIG - write servo data (min, max, invert etc.) from config
+*********************************************/
+void setServoConfig(int count, int &min, int &max, int &offset, int &home, bool &inv)
+{
+    switch (count)
+    {
+    case 0:
+        config.SERVO0_MIN = min;
+        config.SERVO0_MAX = max;
+        config.SERVO0_INVERT = inv;
+        config.SERVO0_HOME = home;
+        config.SERVO0_OFFSET = offset;
+        break;
+    case 1:
+        config.SERVO1_MIN = min;
+        config.SERVO1_MAX = max;
+        config.SERVO1_INVERT = inv;
+        config.SERVO1_HOME = home;
+        config.SERVO1_OFFSET = offset;
+        break;
+    case 2:
+        config.SERVO2_MIN = min;
+        config.SERVO2_MAX = max;
+        config.SERVO2_INVERT = inv;
+        config.SERVO2_HOME = home;
+        config.SERVO2_OFFSET = offset;
+        break;
+    case 3:
+        config.SERVO3_MIN = min;
+        config.SERVO3_MAX = max;
+        config.SERVO3_INVERT = inv;
+        config.SERVO3_HOME = home;
+        config.SERVO3_OFFSET = offset;
+        break;
+    case 4:
+        config.SERVO4_MIN = min;
+        config.SERVO4_MAX = max;
+        config.SERVO4_INVERT = inv;
+        config.SERVO4_HOME = home;
+        config.SERVO4_OFFSET = offset;
+        break;
+    case 5:
+        config.SERVO5_MIN = min;
+        config.SERVO5_MAX = max;
+        config.SERVO5_INVERT = inv;
+        config.SERVO5_HOME = home;
+        config.SERVO5_OFFSET = offset;
+        break;
+    case 6:
+        config.SERVO6_MIN = min;
+        config.SERVO6_MAX = max;
+        config.SERVO6_INVERT = inv;
+        config.SERVO6_HOME = home;
+        config.SERVO6_OFFSET = offset;
+        break;
+    case 7:
+        config.SERVO7_MIN = min;
+        config.SERVO7_MAX = max;
+        config.SERVO7_INVERT = inv;
+        config.SERVO7_HOME = home;
+        config.SERVO7_OFFSET = offset;
+        break;
+    case 8:
+        config.SERVO8_MIN = min;
+        config.SERVO8_MAX = max;
+        config.SERVO8_INVERT = inv;
+        config.SERVO8_HOME = home;
+        config.SERVO8_OFFSET = offset;
+        break;
+    case 9:
+        config.SERVO9_MIN = min;
+        config.SERVO9_MAX = max;
+        config.SERVO9_INVERT = inv;
+        config.SERVO9_HOME = home;
+        config.SERVO9_OFFSET = offset;
+        break;
+    case 10:
+        config.SERVO10_MIN = min;
+        config.SERVO10_MAX = max;
+        config.SERVO10_INVERT = inv;
+        config.SERVO10_HOME = home;
+        config.SERVO10_OFFSET = offset;
+        break;
+    case 11:
+        config.SERVO11_MIN = min;
+        config.SERVO11_MAX = max;
+        config.SERVO11_INVERT = inv;
+        config.SERVO11_HOME = home;
+        config.SERVO11_OFFSET = offset;
+        break;
+    case 12:
+        config.SERVO12_MIN = min;
+        config.SERVO12_MAX = max;
+        config.SERVO12_INVERT = inv;
+        config.SERVO12_HOME = home;
+        config.SERVO12_OFFSET = offset;
+        break;
+    case 13:
+        config.SERVO13_MIN = min;
+        config.SERVO13_MAX = max;
+        config.SERVO13_INVERT = inv;
+        config.SERVO13_HOME = home;
+        config.SERVO13_OFFSET = offset;
+        break;
+    case 14:
+        config.SERVO14_MIN = min;
+        config.SERVO14_MAX = max;
+        config.SERVO14_INVERT = inv;
+        config.SERVO14_HOME = home;
+        config.SERVO14_OFFSET = offset;
+        break;
+    case 15:
+        config.SERVO15_MIN = min;
+        config.SERVO15_MAX = max;
+        config.SERVO15_INVERT = inv;
+        config.SERVO15_HOME = home;
+        config.SERVO15_OFFSET = offset;
         break;
     }
 }
