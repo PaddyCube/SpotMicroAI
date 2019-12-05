@@ -5,7 +5,9 @@
             "includePath": [
                 "C:\\Users\\weberp\\AppData\\Local\\Arduino15\\packages\\esp8266\\tools\\**",
                 "C:\\Users\\weberp\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.1\\**",
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "C:\\Users\\Weber\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.5.2\\**",
+                "C:\\Users\\Weber\\AppData\\Local\\Arduino15\\packages\\esp8266\\tools\\**"
             ],
             "defines": [
                 "_DEBUG",
@@ -13,7 +15,9 @@
                 "_UNICODE"
             ],
             "intelliSenseMode": "msvc-x64",
-            "forcedInclude": []
+            "forcedInclude": [],
+            "cStandard": "c11",
+            "cppStandard": "c++17"
         }
     ],
     "version": 4

@@ -11,39 +11,51 @@
 
 Joint::Joint()
 {
-    Servo =  ServoEasing(PCA9685_DEFAULT_ADDRESS, &Wire); 
+    Servo = ServoEasing(PCA9685_DEFAULT_ADDRESS, &Wire);
 }
 
-bool Joint::init(int pin, int min, int max, bool invert)
+bool Joint::init(int pin, int min, int max, int off, int homepos, bool invert)
 {
     this->Servo.attach(pin);
     servomin = min;
     servomax = max;
+    offset = off;
+    home = homepos;
+    this->invert = invert;
+    this->Servo.setEasingType(EASE_SINE_IN_OUT);
+}
+
+bool Joint::init(int min, int max, int off, int homepos, bool invert)
+{
+    servomin = min;
+    servomax = max;
+    offset = off;
+    home = homepos;
     this->invert = invert;
     this->Servo.setEasingType(EASE_SINE_IN_OUT);
 }
 
 bool Joint::moveAngle(int angle, int msec)
 {
-  int targetangle;
-  
+    int targetangle;
+
     if (invert == true)
     {
-      targetangle = 180 - angle;
+        targetangle = 180 - angle + this->offset;
     }
     else
     {
-      targetangle = angle;
+        targetangle = angle + this->offset;
     }
-    if (angle < servomin || angle > servomax)
+    if ((angle + this->offset) < servomin || (angle + this->offset) > servomax)
     {
         Serial.print("invalid target angle ");
         Serial.println(angle);
         return false;
     }
 
-Serial.print("move to ");
-Serial.println(targetangle);
+    Serial.print("move to ");
+    Serial.println(targetangle);
     this->Servo.startEaseToD(targetangle, msec);
     isLastMoveComplete = false;
     while (this->Servo.isMovingAndCallYield())
@@ -54,6 +66,11 @@ Serial.println(targetangle);
     return true;
 }
 
+void Joint::moveHome()
+{
+    this->Servo.write(this->home + this->offset);
+}
+
 int Joint::getServoMin()
 {
     return this->servomin;
@@ -61,6 +78,18 @@ int Joint::getServoMin()
 int Joint::getServoMax()
 {
     return this->servomax;
+}
+int Joint::getServoOffset()
+{
+    return this->offset;
+}
+int Joint::getServoHome()
+{
+    return this->home;
+}
+bool Joint::getServoInvert()
+{
+    return this->invert;
 }
 
 bool Joint::lastMoveComplete()

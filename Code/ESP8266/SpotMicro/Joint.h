@@ -22,17 +22,24 @@ class Joint
 {
 public:
       Joint();
-      bool init(int pin, int min, int max, bool invert);
+      bool init(int pin, int min, int max, int off, int homepos, bool invert);
+      bool init(int min, int max, int off, int homepos, bool invert);
       bool moveAngle(int angle, int msec);
       int getServoMin();
       int getServoMax();
+      int getServoOffset();
+      int getServoHome();
+      bool getServoInvert();
       bool lastMoveComplete();
+      void moveHome();
 
       ServoEasing Servo;
 
 private:
       int servomin;
       int servomax;
+      int offset;
+      int home;
       bool invert;
       bool isLastMoveComplete = true;
 };

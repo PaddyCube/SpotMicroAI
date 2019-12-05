@@ -15,17 +15,33 @@
 
 # Current state
 ## Settings
- The firmware offers some servo-related settings (min, max, initial pose, offset) for each servo
+### Menu
+The firmware provides some factory defaults for all settings. However, you can change all settings using serial console. If you start serial console, hit 'm' to enter main menu. The main menu provides some functionalities to show and change the settings. All settings can be stored to EEPROM of ESP8266.
+
+<p>
+-----------MAIN MENU----------<br>
+f=delete all USER settings (reset all user settings in EEPROM)<br>
+s=save USER settings (save user settings to EEPROM)<br>
+x=print current settings<br>
+1=communications menu (setup ROS & WIFI)<br>
+2=Servo settings<br>
+m=move servo manual<br>
+0=exit<br>
+</p>
+
+Please note, if you first upload this firmware to your robot, your EEPROM might be filled with corrupt data. Please clear your EEPROM by deleting all user settings (f)
+### Servo
+ The firmware offers some servo-related settings (min, max, initial pose, offset, home position and inversion) for each servo. All these settings can be changed by serial console
  
+### Wifi
+ Currently, the firmware connects to wifi but doesn't read any package here. All wifi-related settings can be configured by serial console 
+
 ## Servo movement
  The firmware is able to drive any of the 16 servos attached to a PCA9685 expansion board using ServoEasing library.
  You can send commands to any servo using serial commands. To do this, connect ESP8266 to your PC, open serial monitor 
  and follow the instructions you see there.
  
-## Wifi
- Currently, the firmware connects to wifi but doesn't read any package here 
+
  
 # Next steps
-- implement EEPROM to store configuration
-- build some serial commands to set/show configuration at EEPROM
 - create a ROS node and ROS message to subscribe to a ROS master

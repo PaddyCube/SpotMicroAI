@@ -15,6 +15,7 @@
 
     USED SOFTWARE AND LIBRARIES
     This file uses ServoEasing https://github.com/ArminJo/ServoEasing for smooth servo movement
+    
     SPOTMICRO
     Initial design of SpotMicro was done by Deok-yeon Kim and can be found here https://www.thingiverse.com/thing:3445283
     Special thanks to bradprin to pick up initial design and bring it even further,
@@ -44,8 +45,6 @@
  *  *****************************************************************************************************************************
 */
 
-
-
 #include "SpotMicro.h"
 // Array of servo objects
 Joint allJoints[16];
@@ -53,46 +52,77 @@ Joint allJoints[16];
 // global variables
 bool initcomplete = false;
 
-
+// configuration;
+configData_t config;
 
 /*********************************************
   SETUP
 *********************************************/
 void setup()
 {
-
   Serial.begin(115200);
   delay(100);
   // Just to know which program is running on my Arduino
+  Serial.println();
   Serial.print("START SPOTMICRO Version ");
   Serial.println(VERSION);
 
-  // connect to WIFI
-  if (setup_wifi() == false)
+  // set configuration to factory default
+  Serial.println();
+  Serial.println("load factory settings");
+  config = loadFactorySettings();
+
+  // now check if EEPROM config is available
+  Serial.println("Try to load configuration from EEPROM");
+  configData_t confEEPROM = loadConfig();
+  if (confEEPROM.EEPROM == true)
   {
-    Serial.println("Failed to connect to WIFI, abort");
-    initcomplete = false;
-    return;
+    Serial.println("configuration found, load from EEPROM");
+    config = confEEPROM;
+  }
+  else
+  {
+    Serial.println("no configuration found in EEPROM, keep factory default");
+  }
+
+  // connect to WIFI
+  Serial.println();
+  if (config.useWifi == true)
+  {
+    Serial.println("Connect to WIFI");
+    if (setup_wifi() == false)
+    {
+      Serial.println("Failed to connect to WIFI, abort");
+      initcomplete = false;
+      return;
+    }
+  }
+  else
+  {
+    Serial.println("No wifi settings found, skip wifi");
   }
 
   // init ROS serial
-
+  Serial.println();
   Serial.println("Building objects for robot joints");
 
   int min = 0;
   int max = 0;
+  int offset = 0;
+  int home = 0;
   bool invert = false;
 
   for (int i = 0; i < 16; i++)
   {
     // read min/max from config
-    getServoConfig(i, min, max, invert);
+    getServoConfig(i, min, max, offset, home, invert);
 
     // initialize servo objects
-    if (allJoints[i].init(i, min, max, invert) == false)
+    if (allJoints[i].init(i, min, max, offset, home, invert) == false)
     {
       // something went wrong during servo init, robot not operational
       Serial.println("Failed to init servo " + i);
+      Serial.println("Enter \'m\' to open main menu");
       initcomplete = false;
       return;
     }
@@ -100,9 +130,8 @@ void setup()
 
   // Set servos to start position.
   // This is the position where the movement starts.
-  Serial.println("Try to communicate with PCA9685 Expander by TWI / I2C");
+  Serial.println("Move robot joints to initial pose");
   moveToInitPose();
-  Serial.println("Communication with with PCA9685 Expander was successful");
 
   // Wait for servos to reach start position.
   delay(500);
@@ -119,12 +148,13 @@ void loop()
 
   if (initcomplete == true)
   {
-
   }
   else
   {
     Serial.println("Initialization of SpotMicro failed - HALT");
-    delay(10000);
+    Serial.println("Enter \'m\' to open main menu");
+    readSerial();
+    delay(5000);
   }
 
   while (initcomplete == true)
@@ -168,9 +198,8 @@ void loop()
 *********************************************/
 void moveToInitPose()
 {
-  allJoints[0].Servo.write(SERVO0_HOME);
-  allJoints[3].Servo.write(SERVO3_HOME);
-  allJoints[6].Servo.write(SERVO6_HOME);
-  allJoints[9].Servo.write(SERVO9_HOME);
-
+  allJoints[0].moveHome();
+  allJoints[3].moveHome();
+  allJoints[6].moveHome();
+  allJoints[9].moveHome();
 }
