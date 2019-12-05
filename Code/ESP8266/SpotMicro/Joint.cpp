@@ -11,29 +11,30 @@
 
 Joint::Joint()
 {
-    Servo =  ServoEasing(PCA9685_DEFAULT_ADDRESS, &Wire); 
+    Servo = ServoEasing(PCA9685_DEFAULT_ADDRESS, &Wire);
 }
 
-bool Joint::init(int pin, int min, int max, bool invert)
+bool Joint::init(int pin, int min, int max, int off, bool invert)
 {
     this->Servo.attach(pin);
     servomin = min;
     servomax = max;
+    offset = off;
     this->invert = invert;
     this->Servo.setEasingType(EASE_SINE_IN_OUT);
 }
 
 bool Joint::moveAngle(int angle, int msec)
 {
-  int targetangle;
-  
+    int targetangle;
+
     if (invert == true)
     {
-      targetangle = 180 - angle;
+        targetangle = 180 - angle;
     }
     else
     {
-      targetangle = angle;
+        targetangle = angle;
     }
     if (angle < servomin || angle > servomax)
     {
@@ -42,8 +43,8 @@ bool Joint::moveAngle(int angle, int msec)
         return false;
     }
 
-Serial.print("move to ");
-Serial.println(targetangle);
+    Serial.print("move to ");
+    Serial.println(targetangle);
     this->Servo.startEaseToD(targetangle, msec);
     isLastMoveComplete = false;
     while (this->Servo.isMovingAndCallYield())

@@ -44,8 +44,6 @@
  *  *****************************************************************************************************************************
 */
 
-
-
 #include "SpotMicro.h"
 // Array of servo objects
 Joint allJoints[16];
@@ -53,26 +51,39 @@ Joint allJoints[16];
 // global variables
 bool initcomplete = false;
 
-
+// configuration;
+configData_t config;
 
 /*********************************************
   SETUP
 *********************************************/
 void setup()
 {
-
   Serial.begin(115200);
   delay(100);
   // Just to know which program is running on my Arduino
   Serial.print("START SPOTMICRO Version ");
   Serial.println(VERSION);
 
-  // connect to WIFI
-  if (setup_wifi() == false)
+  // set configuration to factory default
+  config = loadFactorySettings();
+
+  // now check if EEPROM config is available
+  configData_t confEEPROM = loadConfig();
+  if (confEEPROM.EEPROM == true)
   {
-    Serial.println("Failed to connect to WIFI, abort");
-    initcomplete = false;
-    return;
+    config = confEEPROM;
+  }
+
+  // connect to WIFI
+  if (config.useWifi == true)
+  {
+    if (setup_wifi() == false)
+    {
+      Serial.println("Failed to connect to WIFI, abort");
+      initcomplete = false;
+      return;
+    }
   }
 
   // init ROS serial
@@ -81,18 +92,20 @@ void setup()
 
   int min = 0;
   int max = 0;
+  int offset = 0;
   bool invert = false;
 
   for (int i = 0; i < 16; i++)
   {
     // read min/max from config
-    getServoConfig(i, min, max, invert);
+    getServoConfig(i, min, max, offset, invert);
 
     // initialize servo objects
-    if (allJoints[i].init(i, min, max, invert) == false)
+    if (allJoints[i].init(i, min, max, offset, invert) == false)
     {
       // something went wrong during servo init, robot not operational
       Serial.println("Failed to init servo " + i);
+      Serial.println("Enter \'m\' to open main menu");
       initcomplete = false;
       return;
     }
@@ -119,12 +132,12 @@ void loop()
 
   if (initcomplete == true)
   {
-
   }
   else
   {
     Serial.println("Initialization of SpotMicro failed - HALT");
-    delay(10000);
+    readSerial();
+    delay(5000);
   }
 
   while (initcomplete == true)
@@ -168,9 +181,8 @@ void loop()
 *********************************************/
 void moveToInitPose()
 {
-  allJoints[0].Servo.write(SERVO0_HOME);
-  allJoints[3].Servo.write(SERVO3_HOME);
-  allJoints[6].Servo.write(SERVO6_HOME);
-  allJoints[9].Servo.write(SERVO9_HOME);
-
+  allJoints[0].Servo.write(config.SERVO0_HOME);
+  allJoints[3].Servo.write(config.SERVO3_HOME);
+  allJoints[6].Servo.write(config.SERVO6_HOME);
+  allJoints[9].Servo.write(config.SERVO9_HOME);
 }
