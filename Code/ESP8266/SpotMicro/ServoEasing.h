@@ -33,7 +33,7 @@
 /*
  * For use with e.g. the Adafruit PCA9685 16-Channel Servo Driver aOffUnits.
  */
-//#define USE_PCA9685_SERVO_EXPANDER
+#define USE_PCA9685_SERVO_EXPANDER
 /*
  * If you have only one or two servos, then you can save program space by defining symbol `USE_LEIGHTWEIGHT_SERVO_LIB`.
  * This saves 742 bytes FLASH and 42 bytes RAM.
