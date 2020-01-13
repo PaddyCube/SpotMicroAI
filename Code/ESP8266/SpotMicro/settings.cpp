@@ -57,12 +57,12 @@ configData_t loadFactorySettings()
     conf.servos[4].SERVO_MIN = 0; // hind limb
     conf.servos[4].SERVO_MAX = 180;
     conf.servos[4].SERVO_OFFSET = 0;
-    conf.servos[4].SERVO_INVERT = false;
+    conf.servos[4].SERVO_INVERT = true;
 
     conf.servos[5].SERVO_MIN = 0; // ellbow
     conf.servos[5].SERVO_MAX = 180;
     conf.servos[5].SERVO_OFFSET = 0;
-    conf.servos[5].SERVO_INVERT = false;
+    conf.servos[5].SERVO_INVERT = true;
 
     // rear left
     conf.servos[6].SERVO_MIN = 40; // shoulder
@@ -89,12 +89,12 @@ configData_t loadFactorySettings()
     conf.servos[10].SERVO_MIN = 0; // hind limb
     conf.servos[10].SERVO_MAX = 180;
     conf.servos[10].SERVO_OFFSET = 0;
-    conf.servos[10].SERVO_INVERT = false;
+    conf.servos[10].SERVO_INVERT = true;
 
     conf.servos[11].SERVO_MIN = 0; // ellbow
     conf.servos[11].SERVO_MAX = 180;
     conf.servos[11].SERVO_OFFSET = 0;
-    conf.servos[11].SERVO_INVERT = false;
+    conf.servos[11].SERVO_INVERT = true;
 
     // others
     conf.servos[12].SERVO_MIN = 0;
@@ -117,19 +117,19 @@ configData_t loadFactorySettings()
     // 3.1 Initial Pose (degrees) of robot after start
 
     conf.servos[0].SERVO_HOME = 90; // front left shoulder
-    conf.servos[1].SERVO_HOME = 0;  // front left hind limb
+    conf.servos[1].SERVO_HOME = 180;  // front left hind limb
     conf.servos[2].SERVO_HOME = 0;  // front left ellbow
 
     conf.servos[3].SERVO_HOME = 90; // front right shoulder
-    conf.servos[4].SERVO_HOME = 0;  // front right hind limb
+    conf.servos[4].SERVO_HOME = 180;  // front right hind limb
     conf.servos[5].SERVO_HOME = 0;  // front right ellbow
 
     conf.servos[6].SERVO_HOME = 90; // rear left shoulder
-    conf.servos[7].SERVO_HOME = 0;  // rear left hind limb
+    conf.servos[7].SERVO_HOME = 180;  // rear left hind limb
     conf.servos[8].SERVO_HOME = 0;  // rear left ellbow
 
     conf.servos[9].SERVO_HOME = 90; // rear right shoulder
-    conf.servos[10].SERVO_HOME = 0; // rear right hind limb
+    conf.servos[10].SERVO_HOME = 180; // rear right hind limb
     conf.servos[11].SERVO_HOME = 0; // rear right ellbow
 
     conf.servos[12].SERVO_HOME = 0; // others
