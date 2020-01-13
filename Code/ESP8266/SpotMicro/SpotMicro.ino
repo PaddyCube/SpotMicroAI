@@ -15,7 +15,7 @@
 
     USED SOFTWARE AND LIBRARIES
     This file uses ServoEasing https://github.com/ArminJo/ServoEasing for smooth servo movement
-    
+
     SPOTMICRO
     Initial design of SpotMicro was done by Deok-yeon Kim and can be found here https://www.thingiverse.com/thing:3445283
     Special thanks to bradprin to pick up initial design and bring it even further,
@@ -198,8 +198,8 @@ void loop()
 *********************************************/
 void moveToInitPose()
 {
-  allJoints[0].moveHome();
-  allJoints[3].moveHome();
-  allJoints[6].moveHome();
-  allJoints[9].moveHome();
+  for (int i = 0; i < 16; i++)
+  {
+    allJoints[i].moveHome();
+  }
 }
