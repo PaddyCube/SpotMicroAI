@@ -62,32 +62,32 @@ void menu()
       ch = (char)Serial.read();
       switch (ch)
       {
-      case '0': // exit
-        return;
-      case 'f': // factory reset (delete EEPROM)
-        eraseConfig();
-        break;
-      case 's': // save to EEPROM
-        saveConfig(config);
-        break;
-      case 'x': // print all settings
-        printSettings();
-        printMenu();
-        break;
-      case '1': // communication menu
-        settingsWifi();
-        printMenu();
-        break;
-      case '2': // servo menu
-        settingsServo();
-        printMenu();
-        break;
-      case 'm':
-        moveServoManual();
-        printMenu();
-        break;
-      default:
-        break;
+        case '0': // exit
+          return;
+        case 'f': // factory reset (delete EEPROM)
+          eraseConfig();
+          break;
+        case 's': // save to EEPROM
+          saveConfig(config);
+          break;
+        case 'x': // print all settings
+          printSettings();
+          printMenu();
+          break;
+        case '1': // communication menu
+          settingsWifi();
+          printMenu();
+          break;
+        case '2': // servo menu
+          settingsServo();
+          printMenu();
+          break;
+        case 'm':
+          moveServoManual();
+          printMenu();
+          break;
+        default:
+          break;
       }
     }
     delay(10);
@@ -107,9 +107,9 @@ void readSerial()
 
     switch (ch)
     {
-    case 'm':
-      menu(); // menu
-      break;
+      case 'm':
+        menu(); // menu
+        break;
     }
   }
 }
@@ -139,6 +139,10 @@ void settingsWifi()
     Serial.println(config.SSID);
     Serial.print("PSK: ");
     Serial.println(config.PSK);
+    Serial.print("ROS IP: ");
+    Serial.println(config.ROS_Master);
+    Serial.print("Port: ");
+    Serial.println(config.ROS_Serial_Port);    
     Serial.println();
     Serial.println(" 1=configure");
     Serial.println(" 0=Main Menu");
@@ -149,35 +153,42 @@ void settingsWifi()
 
     switch (waitCharConsole())
     {
-    case '0':
-      return;
-    case '1':
-      Serial.print("Activate WIFI (0/1)?: ");
-      delay(100);
-      purgeConsole();
-      if (waitCharConsole() == '1')
-      {
-        config.useWifi = true;
-      }
-      else
-      {
-        config.useWifi = false;
-      }
+      case '0':
+        return;
+      case '1':
+        Serial.print("Activate WIFI (0/1)?: ");
+        delay(100);
+        purgeConsole();
+        if (waitCharConsole() == '1')
+        {
+          config.useWifi = true;
+        }
+        else
+        {
+          config.useWifi = false;
+        }
 
-      Serial.println(config.useWifi);
-      if (config.useWifi == true)
-      {
-        Serial.print("Enter SSID: ");
-        delay(100);
-        purgeConsole();
-        strncpy(config.SSID, waitStringConsole().c_str(), sizeof(config.SSID));
-        Serial.println(config.SSID);
-        Serial.println("Enter PSK: ");
-        delay(100);
-        purgeConsole();
-        strncpy(config.PSK, waitStringConsole().c_str(), sizeof(config.PSK));
-      }
-      return;
+        Serial.println(config.useWifi);
+        if (config.useWifi == true)
+        {
+          Serial.print("Enter SSID: ");
+          delay(100);
+          purgeConsole();
+          strncpy(config.SSID, waitStringConsole().c_str(), sizeof(config.SSID));
+          Serial.println(config.SSID);
+          Serial.println("Enter PSK: ");
+          delay(100);
+          purgeConsole();
+          strncpy(config.PSK, waitStringConsole().c_str(), sizeof(config.PSK));
+          purgeConsole();
+          Serial.println("Enter IP Address of ROS Master: ");
+          delay(100);
+          config.ROS_Master.fromString(waitStringConsole());
+          purgeConsole();
+          Serial.println("Enter Port number of rosserial server node (common port is 11411): ");
+          config.ROS_Serial_Port = waitStringConsole().toInt();
+        }
+        return;
     }
   }
 }
@@ -232,79 +243,79 @@ void settingsServo()
 
     switch (waitCharConsole())
     {
-    case '0':
-      return;
-    case '1':
-      Serial.print("Enter min angle (0-180): ");
-      delay(100);
-      purgeConsole();
-      min = waitStringConsole().toInt();
-      Serial.println(min);
-      if (min < 0 || min > 180)
-      {
-        Serial.print("invalid angle ");
-        Serial.print(min);
-        Serial.println(", quit!");
+      case '0':
         return;
-      }
-      Serial.print("Enter max angle (0-180): ");
-      delay(100);
-      purgeConsole();
-      max = waitStringConsole().toInt();
-      Serial.println(max);
-      if (max < 0 || max > 180 || max < min)
-      {
-        Serial.print("invalid angle ");
-        Serial.print(max);
-        Serial.println(", quit!");
-        return;
-      }
+      case '1':
+        Serial.print("Enter min angle (0-180): ");
+        delay(100);
+        purgeConsole();
+        min = waitStringConsole().toInt();
+        Serial.println(min);
+        if (min < 0 || min > 180)
+        {
+          Serial.print("invalid angle ");
+          Serial.print(min);
+          Serial.println(", quit!");
+          return;
+        }
+        Serial.print("Enter max angle (0-180): ");
+        delay(100);
+        purgeConsole();
+        max = waitStringConsole().toInt();
+        Serial.println(max);
+        if (max < 0 || max > 180 || max < min)
+        {
+          Serial.print("invalid angle ");
+          Serial.print(max);
+          Serial.println(", quit!");
+          return;
+        }
 
-      Serial.print("Enter offset (-20/20): ");
-      delay(100);
-      purgeConsole();
-      offset = waitStringConsole().toInt();
-      Serial.println(offset);
-      if (offset < -20 || offset > 20)
-      {
-        Serial.print("invalid offset ");
-        Serial.print(offset);
-        Serial.println(", quit!");
-        return;
-      }
+        Serial.print("Enter offset (-20/20): ");
+        delay(100);
+        purgeConsole();
+        offset = waitStringConsole().toInt();
+        Serial.println(offset);
+        if (offset < -20 || offset > 20)
+        {
+          Serial.print("invalid offset ");
+          Serial.print(offset);
+          Serial.println(", quit!");
+          return;
+        }
 
-      Serial.print("Enter home position (0-180): ");
-      delay(100);
-      purgeConsole();
-      home = waitStringConsole().toInt();
-      Serial.println(home);
-      if (home < 0 || home > 180)
-      {
-        Serial.print("invalid home position ");
-        Serial.print(home);
-        Serial.println(", quit!");
-        return;
-      }
-      Serial.print("Invert servo direction (0/1)?: ");
-      delay(100);
-      purgeConsole();
-      if (waitCharConsole() == '1')
-      {
-        invert = true;
-      }
-      else
-      {
-        invert = false;
-      }
-      Serial.println(invert);
+        Serial.print("Enter home position (0-180): ");
+        delay(100);
+        purgeConsole();
+        home = waitStringConsole().toInt();
+        Serial.println(home);
+        if (home < 0 || home > 180)
+        {
+          Serial.print("invalid home position ");
+          Serial.print(home);
+          Serial.println(", quit!");
+          return;
+        }
+        Serial.print("Invert servo direction (0/1)?: ");
+        delay(100);
+        purgeConsole();
+        if (waitCharConsole() == '1')
+        {
+          invert = true;
+        }
+        else
+        {
+          invert = false;
+        }
+        Serial.println(invert);
 
-      // if we reach this point, al configurations are valid
-      setServoConfig(servo, min, max, offset, home, invert);
-      allJoints[servo].init(min, max, offset, home, invert);
-      allJoints[servo].moveHome();
-      Serial.println("Settings changed and Join re-initialized.");
-      Serial.println("ATTENTION you need to save user settings now if you want to persist changes");
-      return;
+        // if we reach this point, al configurations are valid
+        setServoConfig(servo, min, max, offset, home, invert);
+        allJoints[servo].init(min, max, offset, home, invert);
+        allJoints[servo].moveHome();
+        Serial.println("Settings changed and Join re-initialized.");
+        Serial.println("ATTENTION you need to save user settings now if you want to persist changes");
+        return;
     }
   }
 }
@@ -390,6 +401,10 @@ void printSettings()
   Serial.println(config.SSID);
   Serial.print("PSK                           :");
   Serial.println(config.PSK);
+  Serial.print("ROS master IP address         :");
+  Serial.println(config.ROS_Master);
+  Serial.print("ROS serial port               :");
+  Serial.println(config.ROS_Serial_Port);
   Serial.println("---------- Servo limits--------------------------------------");
   Serial.println("Servo \t min \t max \t off \t inv \t home");
   for (int i = 0; i < 16; i++)

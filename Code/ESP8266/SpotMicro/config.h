@@ -1,6 +1,9 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <ESP8266WiFi.h>
+#include <ros.h>
+
 typedef struct
 {     
     int SERVO_MIN; 
@@ -18,8 +21,9 @@ typedef struct
     bool useWifi;
     char SSID[31];
     char PSK[31];
-    char ROS_MASTER[31];
-
+    IPAddress ROS_Master;
+    uint16_t ROS_Serial_Port;
+    
     // servos
     configServo servos[16];
 
