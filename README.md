@@ -30,6 +30,13 @@ m=move servo manual<br>
 </p>
 
 Please note, if you first upload this firmware to your robot, your EEPROM might be filled with corrupt data. Please clear your EEPROM by deleting all user settings (f)
+### Serial connection
+ <p>If you want to use rosserial over USB instead if wifi, you must uncomment this line in SpotMicro.ino <br>
+ 
+#define USE_WIFI
+</p>
+otherwise you will be unable to communicate to ROS master. when using serial communication, serial console with menu shown above will 
+be not reachable most time. Only during a short period (5 seconds) at boot (setup routine), you will be able to launch menu.
 ### Servo
  The firmware offers some servo-related settings (min, max, initial pose, offset, home position and inversion) for each servo. All these settings can be changed by serial console
  
@@ -41,7 +48,8 @@ Please note, if you first upload this firmware to your robot, your EEPROM might 
  You can send commands to any servo using serial commands. To do this, connect ESP8266 to your PC, open serial monitor 
  and follow the instructions you see there.
  
-
+## ROS
+currently, firmware only publish "hello world" to show if rosserial implementation works correctly. Later on, I'll describe used message types here
  
 # Next steps
 - create a ROS node and ROS message to subscribe to a ROS master

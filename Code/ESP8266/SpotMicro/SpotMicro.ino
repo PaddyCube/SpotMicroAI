@@ -7,7 +7,8 @@
 
     SpotMicro uses at least 12 servo motors, three per leg. Most computation of servo movements will be done in ROS and send to
     the robot using ros_serial and will be processed by low-level firmware. This way, ROS master can run either on a embedded system
-    inside the robot or on an external computer. If using external computer, commands will send to robot by wifi
+    inside the robot or on an external computer. If using external computer, commands will send to robot by wifi. For details, please 
+    refer to https://github.com/PaddyCube/SpotMicroAI
 
     HARDWARE
     - ESP8266 module like Wemos D1 mini or others
@@ -20,6 +21,8 @@
     Initial design of SpotMicro was done by Deok-yeon Kim and can be found here https://www.thingiverse.com/thing:3445283
     Special thanks to bradprin to pick up initial design and bring it even further,
     especially for providing STEP files https://www.thingiverse.com/thing:3761340
+
+    I published my own files here https://www.thingiverse.com/thing:3977841
 
     More thanks goes to Florian Wilk who gathered everything in github as some kind of official
     SpotMicro repository here https://github.com/FlorianWilk/SpotMicroAI
@@ -44,8 +47,18 @@
 
  *  *****************************************************************************************************************************
 */
+#define USE_WIFI  // uncomment this, if you use USB cable between RaspberryPI and ESP8266
+
+#ifndef USE_WIFI
+#define ESP_SERIAL
+#endif
 
 #include "SpotMicro.h"
+#include <ros.h>
+#include <std_msgs/String.h>
+
+
+
 // Array of servo objects
 Joint allJoints[16];
 
@@ -55,12 +68,19 @@ bool initcomplete = false;
 // configuration;
 configData_t config;
 
+// ROS
+ros::NodeHandle nh;
+std_msgs::String str_msg;
+ros::Publisher chatter("chatter", &str_msg);
+
+char hello[13] = "hello world!";
+
 /*********************************************
   SETUP
 *********************************************/
 void setup()
 {
-  Serial.begin(115200);
+  Serial.begin(57600);
   delay(100);
   // Just to know which program is running on my Arduino
   Serial.println();
@@ -84,6 +104,7 @@ void setup()
   {
     Serial.println("no configuration found in EEPROM, keep factory default");
   }
+  delay(100);
 
   // connect to WIFI
   Serial.println();
@@ -101,8 +122,8 @@ void setup()
   {
     Serial.println("No wifi settings found, skip wifi");
   }
+  delay(100);
 
-  // init ROS serial
   Serial.println();
   Serial.println("Building objects for robot joints");
 
@@ -138,8 +159,32 @@ void setup()
 
   initcomplete = true;
   Serial.println("Enter \'m\' to open main menu");
+
+#ifndef USE_WIFI // with serial connection, you can't enter menu in loop
+  delay(5000);
+  readSerial();
+#endif
+
+  // init ROS serial
+  setup_ros();
+
 }
 
+void setup_ros()
+{
+
+#ifdef USE_WIFI
+  if (config.useWifi == true)
+  {
+    nh.getHardware()->setConnection(config.ROS_Master, config.ROS_Serial_Port);
+  }
+#endif
+
+  nh.initNode();
+
+  // advertise and subscribe follows where
+  nh.advertise(chatter);
+}
 /*********************************************
   LOOP
 *********************************************/
@@ -148,49 +193,33 @@ void loop()
 
   if (initcomplete == true)
   {
+    if (nh.connected())
+    {
+      str_msg.data = hello;
+      chatter.publish( &str_msg );
+
+      Serial.println("alive");
+
+    } else {
+      Serial.println("no connection to ROS master, is rosserial running?");
+    }
+    nh.spinOnce();
+
+#ifdef USE_WIFI
+    readSerial();
+#endif
+
+    delay(1000);
+
   }
   else
   {
     Serial.println("Initialization of SpotMicro failed - HALT");
     Serial.println("Enter \'m\' to open main menu");
     readSerial();
-    delay(5000);
-  }
-
-  while (initcomplete == true)
-  {
-
-    readSerial();
-
-    /*     Serial.println("Move to 0 degree and back nonlinear in one second each using interrupts of Timer1");
-      //  Servo1.setEasingType(EASE_CUBIC_IN_OUT);
-      //----Servo1.setEasingType(EASE_SINE_IN_OUT);
-      //----Servo0.setEasingType(EASE_SINE_IN_OUT);
-      //  for (int i = 0; i < 3; ++i) {
-      //Servo1.startEaseToD(0, 1000);
-      //Servo0.startEaseToD(0, 1000);
-      while (Servo1.isMovingAndCallYield() || Servo0.isMovingAndCallYield())
-      {
-        ; // no delays here to avoid break between forth and back movement
-      }
-      Serial.println("Move to 180 degree and back nonlinear in one second each using interrupts of Timer1");
-      Servo1.startEaseToD(180, 2000);
-      Servo0.startEaseToD(90, 2000);
-      while (Servo1.isMovingAndCallYield() || Servo0.isMovingAndCallYield())
-      {
-        ; // no delays here to avoid break between forth and back movement
-      }
-      Serial.println("Move to 90 degree and back nonlinear in one second each using interrupts of Timer1");
-      Servo1.startEaseToD(90, 1000);
-      Servo0.startEaseToD(45, 1000);
-      while (Servo1.isMovingAndCallYield() || Servo0.isMovingAndCallYield())
-      {
-        ; // no delays here to avoid break between forth and back movement
-      }
-      //   } */
-    Serial.println("alive");
     delay(1000);
   }
+
 }
 
 /*********************************************

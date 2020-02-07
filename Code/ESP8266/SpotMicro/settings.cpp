@@ -25,11 +25,11 @@ configData_t loadFactorySettings()
     // communication settings
     conf.useWifi = false;
     strlcpy(conf.SSID, "YOUR SSID", 31);
-    //conf.SSID = "YOUR SSID";
     strlcpy(conf.PSK, "YOUR PSK", 31);
 
     // ROS related settings
-    strlcpy(conf.ROS_MASTER, "127.0.0.1", 31);
+    conf.ROS_Master = IPAddress(127, 0, 0, 1);
+    conf.ROS_Serial_Port = 11411;
 
     /*------------------ SERVO SETTINGS -----------*/
     // front left
